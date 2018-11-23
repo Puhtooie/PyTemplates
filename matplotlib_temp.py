@@ -1,6 +1,8 @@
-import numpy as np
+import pandas as pd
 from matplotlib import pyplot as plt
 from datetime import datetime
+from matplotlib import style
+style.use('ggplot')
 
 def graph_test(dictionary=test):
     for pandas_df in range(len(dictionary)):
