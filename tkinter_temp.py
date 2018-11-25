@@ -14,10 +14,10 @@ def select_ind(event):
     parameter_3_lab=Label(top, text= 'StochRSI')
     parameter_4_lab=Label(top, text= 'RSI')
 
-    parameter_1_c = IntVar()
-    parameter_2_c = IntVar()
-    parameter_3_c = IntVar()
-    parameter_4_c = IntVar()
+    parameter_1_Check = IntVar()
+    parameter_2_Check = IntVar()
+    parameter_3_Check = IntVar()
+    parameter_4_Check = IntVar()
 
     parameter_1 = Checkbutton(top, text = "Use parameter_1", variable = parameter_1_c, \
                          onvalue = 1, offvalue = 0, height=5, \
