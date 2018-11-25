@@ -53,4 +53,5 @@ def select_ind(event):
     parameter_4.grid(row=3 ,column=0)
 
     set_test_btn.grid(row=4 ,column=0)
+    top.mainloop()
 
