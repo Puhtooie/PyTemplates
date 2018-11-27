@@ -25,9 +25,9 @@ dictionary_key = stuff[0]
 dictionary = stuff[1]
 del stuff
 
-#delete pickled hdf
+#delete pickled df
 def delete_dictionary_pickle():
-    dictionary_key= pd.read_pickle('key.pickle')
+    dictionary_key= pd.read_pickle('keys.pickle')
     for key in dictionary_key:
         os.remove(key+'.pickle')
     os.remove('keys.pickle')
@@ -48,7 +48,6 @@ dictionatry={key: pd.read_hdf('dictionatry.h5',key) for key in dictionatry}
 
 #deleting is the samme as a pickle
 
-#expiriment with hickle and pytables to commit a np.array directly instead. Post time differences
 ################################################################################################################################################################
-
-#/j
+#expiriment with hickle and pytables to commit a np.array directly to hdf5 instead. Post time differences
+#/to do ^
