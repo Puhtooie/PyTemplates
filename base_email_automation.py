@@ -34,13 +34,7 @@ def send_email(email='str',password='str', send_to='str',
     server.login(email,password)
     server.sendmail(email,send_to,text)
     server.quit()
-
-    server=smtplib.SMTP('smtp.gmail.com',587)
-    server.starttls()
-    server.login(email,password)
-    server.sendmail(email,send_to,text)
-    server.quit()
-
+    
 def format_emails():
     file_locations=['C:\\the_location_of\\your_file',
                    'C:\\the_location_of\\your_2nd_file']
