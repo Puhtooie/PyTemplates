@@ -41,18 +41,19 @@ def send_email(email='str',password='str', send_to='str',
     server.sendmail(email,send_to,text)
     server.quit()
 
-file_locations=['C:\\the_location_of\\your_file',
-               'C:\\the_location_of\\your_2nd_file']
-email='youremail@gmail.com'
-pas='password'
-subject='Subject title'
+def format_emails():
+    file_locations=['C:\\the_location_of\\your_file',
+                   'C:\\the_location_of\\your_2nd_file']
+    email='youremail@gmail.com'
+    pas='password'
+    subject='Subject title'
 
-addresses=['intended_emails@mail.com']
+    addresses=['intended_emails@mail.com']
 
-message='text or file upload'
+    message='text or file upload'
 
-for i in addresses:
-  #if you don't have any attatchments to send makes files=[False]
-  send_email(email=email,password=pas, send_to_email=i,
-               subject=subject,message=message,files=file_locations)
-
+    for i in addresses:
+      #if you don't have any attatchments to send makes files=[False]
+      send_email(email=email,password=pas, send_to_email=i,
+                   subject=subject,message=message,files=file_locations)
+format_emails()
