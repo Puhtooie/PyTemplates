@@ -25,8 +25,8 @@ def send_email(email='str',password='str', send_to='str',
                 Name=basename(f)
                 )  
     # After the file is closed
-        part['Content-Disposition'] = 'attachment; filename="%s"' % basename(f)
-        msg.attach(part)
+            part['Content-Disposition'] = 'attachment; filename="%s"' % basename(f)
+            msg.attach(part)
 
 
     server=smtplib.SMTP('smtp.gmail.com',587)
