@@ -14,8 +14,8 @@ def mongo_add_data():
     data_table = mongo.db.data
     
     '''
-    The below loop is intended for a dict of pandas dataframes with hundreds of thousands of rows. 
-    It currently hasn't been tested for millions of rows. 
+    The below loop is intended for a dict of pandas dataframes with hundreds of thousands of rows totaling for millions of rows. 
+    It currently hasn't been tested for millions of rows per dataframe. 
     Considering something like pickle compression for that if json isn't fast enough
     '''
     for df in range(len(key)):
