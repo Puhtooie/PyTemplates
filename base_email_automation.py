@@ -15,12 +15,12 @@ class Email:
                files = False, text):
       this.email = email #sending email String
       this.pass = password #sending email pass String
-      this.addresses = addresses
+      this.addresses = addresses #List of Email Addresses in Strings
       this.subject = subject #subject headed String
       this.files = files #the location of files to be attatched List of Strings
       this.text = text #text to be sent String
     
-  def send_email(sendTo):
+  def send_email( this, sendTo):
 
       msg=MIMEMultipart()
       msg['From']= this.email
@@ -43,7 +43,7 @@ class Email:
 
 
 
-  def format_emails():
+  def format_emails(this):
 
       server=smtplib.SMTP('smtp.gmail.com',587)
       server.starttls()
