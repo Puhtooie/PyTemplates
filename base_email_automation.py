@@ -7,7 +7,9 @@ from email.mime.base import MIMEBase
 from email.utils import formatdate
 from email import encoders
 
-class Email()
+class Email:
+  
+  
   def __init__(email, password, 
                addresses, subject,
                files = False, text):
