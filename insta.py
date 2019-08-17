@@ -1,108 +1,101 @@
-https://medium.com/@dvoiak.stepan/https-medium-com-dvoiak-stepan-instagram-analitics-with-unofficial-api-ipython-and-matplotlib-a9f3f8b2b16a
-https://github.com/oyvsyo/insta_play/blob/master/analys.ipynb?source=post_page---------------------------media_ids = []
+#https://medium.com/@dvoiak.stepan/https-medium-com-dvoiak-stepan-instagram-analitics-with-unofficial-api-ipython-and-matplotlib-a9f3f8b2b16a
+#https://github.com/oyvsyo/insta_play/blob/master/analys.ipynb?source=post_page---------------------------media_ids = []
+
 from InstagramAPI import InstagramAPI
+import json
 import time
 import pandas as pd
 
+
 class InstaAcct:
 
-    def __init__(self):
-        self.insta = InstagramAPI("username", "password")
-        self.insta.login()
-        self.acctData = pd.Series({'my_id':self.getUserId()})
+    def __init__(self, user_name=None, pswd=None, ppg=False,
+                 api=None, acctData=None, g=None, login=True):
+        # make proxies an obj containing all the proxies to send and recieve signals from
+
+        a = type(None)
+        if login and a != type(pswd):
+            # this instantiates the parent class
+            # must include user_name and pswd
+            self.insta = InstagramAPI(user_name, pswd)
+            self.insta.login()
+
+            self.getUserId()
+            self.get_follows()
+
+
+        elif a != type(api):
+            # instantiates the child class. include api, acctData
+            self.insta = api
+            self.get_acct_Data(acctData)
+            print(acctData)
+
+            if self.acctData['is_private'] == False:
+                self.get_follows()
+            time.sleep(2)
+
+        else:
+            raise ValueError('Value of %r in Pswd, %r in api' % (pswd, api))
 
     def getUserId(self):
+
         self.insta.getProfileData()
-        return self.insta.LastJson['user']['pk']
+        a = self.insta.LastJson['user']
+        self.insta.getUsernameInfo(a['pk'])
+        self.acctData = pd.DataFrame(self.insta.LastJson)
+        self.acctData = self.acctData.user
+        time.sleep(1)
 
-    def getMediaCount(self):
-        self.insta.getUsernameInfo(self.acctData.my_id)
-        self.acctData.n_media =  self.insta.LastJson['user']['media_count']
+    def get_acct_Data(self, acctData):
 
-    def getMaxID(self):
-        self.getMediaCount()
+        self.insta.getUsernameInfo(acctData['pk'])
+        self.acctData = pd.Series(inst.insta.LastJson)
+        if 'user' in self.acctData:
+            self.acctData = self.acctData.user
 
-        media_ids = []
-        max_id = ''
-        n_m = self.acctData.n_media
-        available = True
-        while available and n_m > 0:
-            n = n_m/18+1
-            for i in range(int(n)): 
-                self.insta.getUserFeed(usernameId=self.acctData.my_id, maxid = max_id)
-                media_ids += self.insta.LastJson['items'] 
-                if self.insta.LastJson['more_available']==False:
-                    print("no more id's avaliable")
-                    available = False
-                    break
-                max_id = self.insta.LastJson['next_max_id'] 
-                print(i, "   next media id = ", max_id, "  ", len(media_ids))
-                time.sleep(3)
-            n_m -=18
-        self.acctData.media_ids = media_ids
+    def get_follows(self):
+        time.sleep(1)
+        self.followers = pd.DataFrame(self.insta.getTotalFollowers(self.acctData['pk']))
+        time.sleep(1)
+        self.followings = pd.DataFrame(self.insta.getTotalFollowings(self.acctData['pk']))
 
+        
+        
+    def getFollowersData(self,ppg = False, chain = False):
 
+        for i in range(len(self.followers.pk)):
 
-    def getAllLikes(self):
-        self.getMaxID()
-        likers = []
-        m_id = 0
-        print("wait %.1f minutes" % (self.acctData.n_media*2/60.))
-        for i in range(len(self.acctData.media_ids)):
-            m_id = self.acctData.media_ids[i]['id']
-            self.insta.getMediaLikers(m_id)
-            likers += [self.insta.LastJson]
-            time.sleep(2)
-        print("likes query done!")    
-        self.acctData.likers = likers
+            name = self.followers.iloc[i]['username']
+            if name not in users.keys():
 
+                self.followers.iloc[i] = InstaAcct(api=self.insta, 
+                                               acctData=self.followers.iloc[i])
+                users[name]= self.followers.iloc[i]
+                users[name]= self.followers.iloc[i].pk
+                time.sleep(1)
+            else:
+                self.followers.iloc[i] = users[name]
 
-    def getUserLikeSet(self):
-
-        self.getAllLikes()
-        users = []
-        for i in self.acctData.likers:
-                users += map(lambda x: i['users'][x]['username'],
-                             range(len(i['users'])))
-        users_set = set(users)
-
-        print("all users = ", len(users), " uniqum users = ", len(users_set))
-
-        l_dict = {}
-        for user in users_set:
-            # l_dict structure - {username:number_of_liked_posts} 
-            l_dict[user] = users.count(user)
-        self.acctData.l_dict = l_dict
+        self.followers = self.followers.pk
+        
+        if ppg:
+            if chain:
+                for i in self.followers.keys():
+                    self.followers[i].getFollowersData(ppg = True, chain = True)
+            else:
+                for i in self.followers.keys():
+                    self.followers[i].getFollowersData()
 
 
-
-    def sortLikes(self):
-        import operator
-        self.getUserLikeSet()
-        all_pairs = sorted(self.acctData.l_dict.items(), key=operator.itemgetter(1))
-        n_users = 10 # top 10 users
-        pairs = all_pairs[-n_users:]
-        y=[]
-        x=[]
-        for i in range(len(pairs)):
-            y.append(pairs[i][1])
-            x.append(pairs[i][0])
-        return [x,y,pairs]
-
-
-    def plotLikes(self):
-        import matplotlib.pyplot as plt
-        from matplotlib.ticker import FormatStrFormatter
-
-        x,y,pairs = self.sortLikes()
-
-        fig = plt.figure()
-        plt.xkcd()
-        plt.xticks(range(len(pairs)), x, rotation='vertical')
-        plt.ylim([int(min(y) - min(y) * .25), int(max(y) + max(y) * .25)])
-        plt.bar(range(len(pairs)), y)
-        plt.xlabel('USERS')
-        plt.ylabel('number of liked posts')
-        plt.show()
-
+     
+if __name__ == '__main__':
+    inst = InstaAcct(user_name = username, pswd = pswd, ppg=True)
+    users = {}
+    users[inst.acctData.username] = inst
+    '''
+    if you only want to fill data for the parent node's followers - inst.getFollowersData()
+    to fill data from the parent node follower's followers inst.getFollowersData(ppg= True)
+    to pull all available public nodes through parent node inst.getFollowersData(ppg= True, chain = True)
+    '''
+    inst.getFollowersData(ppg= True)
 
