@@ -93,8 +93,8 @@ if __name__ == '__main__':
     users = {}
     users[inst.acctData.username] = inst
     '''
-    if you only want to fill data for the parent node's followers - inst.getFollowersData()
-    to fill data from the parent node follower's followers inst.getFollowersData(ppg= True)
+    to propegate data only for the parent node's followers - inst.getFollowersData()
+    to propegate data through to the followers of the parent node's followers inst.getFollowersData(ppg= True)
     to pull all available public nodes through parent node inst.getFollowersData(ppg= True, chain = True)
     '''
     inst.getFollowersData(ppg= True)
